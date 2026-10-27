@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';import{createFrog,pull,releaseHand,pressRear,releaseRear,advance,cancelControls,currentAt,obstacleAt,nudge}from'../dist/frog/core.mjs';
+function run(){const s=createFrog();s.status='playing';return s}function ticks(s,n){for(let i=0;i<n;i++)advance(s,.02)}
+test('alternating front hands produces steady swimming',()=>{const s=run();assert.equal(pull(s,0,.2),true);releaseHand(s,0);ticks(s,8);assert.equal(pull(s,1,.4),true);ticks(s,20);assert.equal(s.strokes,2);assert.ok(s.z>0);assert.ok(s.speed>0)});
+test('repeating one front hand breaks combo instead of granting free speed',()=>{const s=run();pull(s,0,.2);releaseHand(s,0);const speed=s.speed;assert.equal(pull(s,0,.4),false);assert.equal(s.combo,0);assert.ok(s.speed<speed)});
+test('rear legs charge while held and release into a powered leap',()=>{const s=run();pressRear(s,0);ticks(s,50);assert.ok(s.charges[0]>.65);assert.equal(releaseRear(s,0),true);assert.ok(s.leap);assert.ok(s.speed>4);assert.equal(s.charges[0],0)});
+test('a quick rear-foot tap does not create a fake leap',()=>{const s=run();pressRear(s,1);ticks(s,3);assert.equal(releaseRear(s,1),false);assert.equal(s.leap,null)});
+test('pause and cancelled controls safely discard stored charge',()=>{const s=run();pressRear(s,0);ticks(s,20);s.status='paused';cancelControls(s);const before=structuredClone(s);ticks(s,100);assert.deepEqual(s,before);assert.deepEqual(s.charges,[0,0])});
+test('current, steering, and obstacles stay deterministic and bounded',()=>{assert.equal(currentAt(22),currentAt(22));assert.deepEqual(obstacleAt(8),obstacleAt(8));const s=run();nudge(s,9);assert.equal(s.x,1.12);nudge(s,-18);assert.equal(s.x,-1.12)});
