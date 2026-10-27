@@ -1,27 +1,29 @@
 # GitHub → Cloudflare deployment
 
-Cloudflare Workers Builds is connected to this GitHub repository. HOOF is live at https://hoof-game.a2040404.workers.dev with the `hoof-leaderboard` D1 database connected. The first GitHub-triggered production build succeeded, and both the game and leaderboard endpoint returned HTTP 200.
+HOOF is live at https://hoof-game.a2040404.workers.dev with the `hoof-leaderboard` D1 database connected. Git-triggered builds previously published from the portfolio repo; reconnect Workers Builds to this repository before expecting a push to deploy.
 
 Use these project settings:
 
 | Setting | Value |
 | --- | --- |
-| GitHub repository | `clement55688/clement-portfolio` |
-| Production branch | `arcade/hoof-game` |
-| Root directory | `clement-arcade` |
+| GitHub repository | `clement55688/clement-arcade` |
+| Production branch | `main` |
+| Root directory | repository root |
 | Worker name | `hoof-game` |
 | Build command | `npm run check` |
 | Deploy command | `npm run deploy:cloudflare` |
-| Build watch path | `clement-arcade/**` |
 | Node version | `24` (also declared in `.node-version`) |
 | Package manager | `pnpm@11.19.0` |
 
-Deployment connection repaired on 2026-10-24 after the repository's branch and
-folder renames. Cloudflare's production branch is now `arcade/hoof-game`, root
-directory `clement-arcade`, and include path `clement-arcade/**`. The old dashboard
-settings still referenced the deleted `codex/hoof-game` branch and `horse-game/`
-folder, which caused the previous failed build. The existing managed deployment
-token is retained; local development and Git-triggered publishing need no new key.
+The arcade now lives at the root of this repository. Point Cloudflare Workers
+Builds here, with production branch `main` and no subdirectory. Worker name
+stays `hoof-game`, so https://hoof-game.a2040404.workers.dev does not change.
+The previous portfolio connection (`clement-portfolio`, branches
+`codex/hoof-game` then `arcade/hoof-game`, folders `horse-game/` then
+`clement-arcade/`) will not publish this repo. The managed deployment token is
+not stored in source control. Local deploys need `npx wrangler login` or
+`CLOUDFLARE_API_TOKEN`. Git-triggered builds need the Git connection moved to
+this repository; they do not need a new token.
 
 The database UUID and account ID in `wrangler.jsonc` were read from the signed-in Cloudflare dashboard. These identifiers are not secrets. The deployment token is managed by Cloudflare, not stored in source control. Preview builds are disabled so they cannot modify the production leaderboard.
 

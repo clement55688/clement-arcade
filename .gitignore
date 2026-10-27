@@ -1,7 +1,10 @@
-/dist/server/
-/dist/.openai/
+node_modules/
+dist/
+.wrangler/
+tmp/
+work/
+*.log
+*.zip
+.env*
 /.local/
-/node_modules/
-/.wrangler/
 /.dev.vars
-/.env*
