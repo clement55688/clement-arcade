@@ -1,6 +1,8 @@
 # Clement Arcade
 
-Browser mini-games in Clement’s Gaming Room. No accounts.
+Browser mini-games in Clement’s Gaming Room, with shared leaderboards. No accounts.
+
+![HOOF!, one of the games](dist/social.png)
 
 Live: https://hoof-game.a2040404.workers.dev/  
 Catvolution: https://hoof-game.a2040404.workers.dev/catvolution/
@@ -16,6 +18,13 @@ The Worker name is `hoof-game`. Keep that name so the URL stays the same.
 - [TEN.00](https://hoof-game.a2040404.workers.dev/ten-seconds/) — live ten-second timer
 - [Itchy Business](https://hoof-game.a2040404.workers.dev/sneaky-scratch/) — stealth scratching
 - [Mochi Drop](https://hoof-game.a2040404.workers.dev/mochi-drop/) — drop and merge cats
+
+## Stack
+
+- Games: plain HTML, CSS and JavaScript in `dist/`, no framework
+- Server: one Cloudflare Worker (`worker/index.js`); `build.mjs` bundles the game assets into it and it also serves the leaderboard API
+- Data: Cloudflare D1, with SQL migrations in `drizzle/`; local development uses SQLite
+- Tests: `node:test`, run in CI on every push and pull request
 
 ## Local development
 
